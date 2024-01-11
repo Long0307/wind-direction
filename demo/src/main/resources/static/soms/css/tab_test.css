@@ -1,0 +1,105 @@
+.tab button {
+  background-color: #1A305F;
+  color: #9AABBD;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  width: 10%;
+  text-align: center;
+  line-height: normal;
+}
+
+.tab button:hover {
+  background-color: #37538E;
+}
+
+.tab button.active {
+  background-color: #37538E;
+}
+
+.tabcontent {
+  display: none;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-top: none;
+  clear: both;
+  position: absolute;
+  top: 10vh;
+  left: 0;
+  width: 30vh;
+  height: 100vh;
+  background: #03153A;
+  padding: 20px;
+  z-index: 1;
+  left:auto;
+  right:0;
+}
+
+.tabcontent h3, 
+.tabcontent p,
+#Tab1 table, 
+#Tab1 #clickMeButton, 
+#result div {
+  margin: 20px 0;
+}
+
+.tablayouts {
+  height: 5vh;
+  background: #1A305F;
+}
+
+.tab button {
+  background-color: #1A305F;
+  color: #9AABBD;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  width: 10%;
+  text-align: center;
+  line-height: normal;
+}
+
+.tab button:hover {
+  background-color: #37538E;
+}
+
+.tab button.active {
+  background-color: #37538E;
+}
+
+.tabcontent {
+  display: none;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-top: none;
+  clear: both;
+  position: absolute;
+  top: 10vh;
+  left: 0;
+  width: 30vh;
+  height: 100vh;
+  background: #03153A;
+  padding: 20px;
+  z-index: 1;
+  left:auto;
+  right:0;
+}
+
+.tabcontent h3, 
+.tabcontent p,
+#Tab1 table, 
+#Tab1 #clickMeButton, 
+#result div {
+  margin: 20px 0;
+}
+
+.tablayouts {
+  height: 5vh;
+  background: #1A305F;
+}

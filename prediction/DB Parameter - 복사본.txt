@@ -1,0 +1,8 @@
+127.0.0.1
+3306
+weather_user
+weather123
+weather
+raw_data
+estimate_grid_sensor_data
+cmap_grid_data

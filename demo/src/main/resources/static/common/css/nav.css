@@ -1,0 +1,110 @@
+html {
+    font-size: 62.5%;
+}
+
+body {
+    margin: 0;
+}
+
+
+.navDiv {
+    width: 100vw;
+    height: 48px;
+}
+
+.nav-container {
+    display: inline-block;
+    width: 100vw;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    background-color: #1A305F;
+    border: solid #03153A;
+    border-width: 2px;
+    list-style-type: none;
+    line-height: 3;
+}
+
+.nav-item-on {
+    color: white !important;
+    background-color: #37538E;
+    border-bottom: 2px solid deepskyblue;
+    display: inline-block;
+    margin-left: -3px;
+    cursor: pointer;
+    border-width: 1px;
+    text-align: center;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    height: 44px;
+    width: 130px;
+}
+
+.nav-item-off {
+    font-weight: bold;
+    font-size: 1.0rem;
+    font-size: 15px;
+    color: #9AABBD;
+    display: inline-block;
+    margin-left: -3px;
+    cursor: pointer;
+    border-width: 1px;
+    text-align: center;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    height: 44px;
+    width: 140px;
+}
+
+.navLeft a {
+    text-decoration-line: none;
+    margin-top: 20px;
+    color: inherit;
+}
+
+.nav-item-off:hover {
+    text-decoration: none;
+    background-color: #37538E;
+}
+
+.navLeft {
+    width: 90vw;
+    display: inline-flex;
+}
+
+.navCenter {
+    width: 0vw;
+    display: inline-flex;
+    color: white;
+}
+
+.navRight {
+    width: 5vw;
+    margin-left: -100px;
+}
+
+
+@media (max-width: 1024px) {
+
+    /* íƒœë¸”ë¦¿ ìµœì í™”ëœ ì˜ˆì™¸ CSS ì½”ë“œ*/
+    .nav-item {
+        display: inline-block;
+        margin-left: -3px;
+        cursor: pointer;
+        border-width: 1px;
+        text-align: center;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+        height: 44px;
+        width: 100%;
+    }
+
+    .nav-item a {
+        text-decoration-line: none;
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 1.0rem;
+        color: inherit;
+        /* ë§í¬ì˜ ìƒ‰ìƒ ì œê±° */
+    }
+}

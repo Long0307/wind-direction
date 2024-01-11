@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}">
+    
+    <th:block layout:fragment="head">
+    	<title>바람길 예측 hahaha</title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+        <!--/* 이 영역에 공통으로 사용할 css, js library를 선언한다. */-->
+        <link th:href="@{/common/css/main.css}" rel="stylesheet" />
+        <link th:href="@{/common/css/header.css}" rel="stylesheet" />
+        <link th:href="@{/common/css/nav.css}" rel="stylesheet" />
+        
+        <link th:href="@{/lng/css/leftmenu3.css}" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/lng/js/windpath_prediction.js"></script>
+        
+    </th:block>
+    <body>
+        <div layout:fragment="content" class="content">
+			<th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
+            
+            <!-- 아래의 코드를 추가 합니다.-->
+            
+            
+            <!-- 탭 메뉴 -->
+            <nav class="navDiv">
+				<ul class="nav-container">
+					<div class="navLeft">
+						<li class="nav-item nav-item-off" id="item1" style="width: 180px;">
+							<a id="item1a" href="#">실시간 악취관제</a>
+						</li>
+						<li class="nav-item nav-item-off nav-item-on" id="item2">
+							<a id="item2a" href="#">바람길 예측</a>
+						</li>
+						<li class="nav-item nav-item-off" id="item3">
+							<a id="item3a" href="#">악취예보</a>
+						</li>
+						<li class="nav-item nav-item-off" id="item4">
+							<a id="item4a" href="#">악취추적차량</a>
+						</li>
+						<li class="nav-item nav-item-off" id="item5">
+							<a id="item5a" href="#">방지시설 예측</a>
+						</li>
+					</div>
+					<div class="navCenter"></div>
+					<div class="navRight"></div>
+				</ul>
+			</nav>
+			
+		    <!-- 지도 추가 -->
+			<div class="mapcontents">
+				<!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
+				<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+				<script src="https://kit.fontawesome.com/15c732f225.js" crossorigin="anonymous"></script>
+				
+				
+				<div class="menu-container">
+					<div class="weather">
+						<h1>Ulsan</h1>
+						<table class="table-to-weather">
+							<thread>
+								<tr>
+									<td colspan="4">
+										<span id="nowDate"></span>
+										<h1 class="h1-clock" id="nowTime">10:17:42</h1>
+									</td>
+								</tr>
+							</thread>
+							<tbody>
+								<tr>
+									<td>
+										<!-- 온도 정보 -->
+										<span id="nowTemp"></span>
+									</td>
+									<td>
+										<!-- 습도 정보 -->
+										<span id="nowHumi"></span>
+									</td>
+									<td>
+										<!-- 풍향 정보 -->
+										<span id="nowDirection"></span>
+									</td>
+									<td>
+										<!-- 풍속 정보 -->
+										<span id="nowSpeed"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				    <div class="predict-container">
+				        <nav class="predict-navDiv">
+				            <ul class="predict-nav-container">
+				                <li class="predict-nav-item predict-nav-item-on predict-nav-item-off" id="item11">
+				                    <a id="predict-item1" href=#>관심지점</a>
+				                </li>
+				                <li class="predict-nav-item predict-nav-item-off" id="item22">
+				                    <a id="predict-item2" href=#>민원신고지점</a>
+				                </li>
+				            </ul>
+				        </nav>
+						<div class="predict-tab-content">
+						    <div class="predict-tab-item" id="content11">
+					            <div class="table-container">
+					                <table id="predict-table"> <!--  border = "1" -->
+					                    <tbody>
+									        <tr>
+									            <td>
+									                <table id="interest-point"> <!--  border = "1" -->
+									                    <tbody>
+															<!-- 관심지점 테이블 내용 -->
+									                    </tbody>
+									                </table>
+									            </td>
+									        </tr>
+									        <tr>
+									            <td>
+									                <table id="dateTime"> <!--  border = "1" -->
+									                    <tbody>
+															<!-- 날짜/시간조회 테이블 내용 -->
+									                    </tbody>
+									                </table>
+									            </td>
+									        </tr>
+									        <tr>
+									            <td>
+													<br>
+									                <table id="checkbox-interest-point"> <!--  border = "1" -->
+									                    <tbody>
+															<!-- 관심지점 체크박스 테이블 내용 -->
+									                    </tbody>
+									                </table>
+									            </td>
+									        </tr>
+					                    </tbody>
+					                </table>
+					            </div>
+				            </div>
+						    <div class="predict-tab-item" id="content22">
+					            <div class="table-container">
+					                <!-- Table for displaying circles and place names -->
+					                <table id="interestPointsTable">
+					                    <tbody>
+											민원신고지점 탭
+					                        <!-- Here, rows will be added dynamically -->
+					                    </tbody>
+					                </table>
+					            </div>
+						    </div>
+	    				    <div class="settings" id="settings">
+								<!-- 환경 설정 확인 버튼 -->
+								<div class="envSetting">
+									<a id="settingsLink" href="#">설정</a>
+								</div>
+								<div class="loading" id="predict-status">
+									<div class="loading-icon"></div>
+								    <div class="loading-text">Loading...</div>
+								</div>
+								<!-- 모달 창 -->
+								<div id="predictSettingsModal" class="modal">
+								    <div class="modal-content">
+								        <span class="close">&times;</span>
+								        <div style="font-size: 15px; font-weight: bold;">바람길예측 설정값</div>
+								        <br>
+								        <div id="modalContent"></div>
+								    </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				
+    			<div id="maps">
+					<div class="map" id="newMap" style="position: relative; overflow: hidden;">
+					</div>
+					<!-- Slider 추가 -->
+					<div class="container" id="contain-slider">
+						<table class="outer-table" id="table-slider">
+						    <tr>
+						        <td>					    
+									<input type="range" min="1" max="11" value="11" class="slider" id="mySlider" title="Adjust Value">
+								</td>
+						    </tr>
+						    <tr>
+						        <td>
+						            <table class="inner-table" id="inner-table-slider">
+						                <tr>
+											<td id="predict-t-9">t-9분 전</td>
+						                    <td id="predict-t-8">t-8분 전</td>
+						                    <td id="predict-t-7">t-7분 전</td>
+						                    <td id="predict-t-6">t-6분 전</td>
+						                    <td id="predict-t-5">t-5분 전</td>
+						                    <td id="predict-t-4">t-4분 전</td>
+						                    <td id="predict-t-3">t-3분 전</td>
+						                    <td id="predict-t-2">t-2분 전</td>
+						                    <td id="predict-t-1">t-1분 전</td>
+						                    <td id="predict-t-0">t-0분 전</td>
+						                    <td id="predict-t-11">예측 시작</td>
+						                </tr>
+						            </table>
+						        </td>
+						    </tr>
+						</table>
+					</div>
+				    <div class="legend" id="legend-slider">
+				        <table class="outer-table" id="legend-table">
+				            <tr>
+				                <td>
+									<div class="legend-title" style="font-size: 15px;">
+										바람길 예측 분포 확률
+									</div>
+								</td>
+				            </tr>
+				            <tr>
+				                <td colspan="2">
+				                    <table class="inner-table">
+				                        <tr>
+				                            <td>
+												<div class="legendone">
+												    <div class="middle-percentage">50%</div>
+												</div>
+											</td>
+				                        </tr>
+				                    </table>
+				                </td>
+				            </tr>
+							<tr>
+							    <td colspan="2">
+							        <table class="inner-table">
+							            <tr>
+							                <td style="width: 10%; text-align: center; font-weight: bold; font-size: 13px;">
+							                    <span>범례 표시</span>
+							                </td>
+							                <td style="width: 10%; text-align: center;">
+							                    <input type="range" min="0" max="1" value="1" step="1" title="범례 표시" style="width: 50%;" id="see-legend">
+							                </td>
+							            </tr>
+							        </table>
+							    </td>
+							</tr>
+				        </table>
+				    </div>
+				</div>
+			    <!-- 기타 .mapcontents 안의 다른 컨텐츠 -->
+	    		<!-- 탭 컨텐츠 -->
+			</div>
+        </div>
+        <th:block layout:fragment="footer" th:include="@{/fragments/footer}"></th:block>
+        <link th:href="@{/common/css/main.css}" rel="stylesheet" />
+    </body>
+</html>

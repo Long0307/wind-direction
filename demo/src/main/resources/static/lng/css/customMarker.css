@@ -1,0 +1,37 @@
+/*
+ * Property styles in unhighlighted state.
+ */
+.office-tag {
+    background-color: green;
+    /*top-left-x top-right-x bottom-right-x bottom-left-x / top-left-y top-right-y bottom-right-y bottom-left-y*/
+    border-radius: 50px 20px 20px 50px / 50px 20px 20px 50px;
+    height: 25px;
+    color: #FFFFFF;
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    position: relative;
+    font-weight: bold;
+}
+
+.gm-style-iw {
+    width: 530px !important;
+    top: 24px !important;
+    left: 0px !important;
+    background-color: #fff;
+
+}
+
+#iw-container {
+    width: 2500px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.marker-table {
+    padding: 5px;
+    text-align: center;
+    width: 500px;
+}

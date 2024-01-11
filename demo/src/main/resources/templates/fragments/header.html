@@ -1,0 +1,34 @@
+<!-- # header.html -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<nav>
+	    <ul class="header-container">
+	        <div class="header-left">
+	            <a id="homehref" href="/home" style="margin-top: 20px;">
+	                <img src="/common/img/tsei.png" alt="Tsei" width="40px" height="40px">
+	                <p> TAESUNG </p>
+	            </a>
+	        </div>
+	        <div class="header-center" style="padding-right: 300px;">
+	            <p> 스마트 추적 관제 시스템 </p>
+	        </div>
+	        <div class="header-right">
+	            <li class="bi bi-bell"><a href=""></a></li>
+	            <li class="bi bi-gear"><a href=""></a></li>
+	            <dd class="dropdown_on_header">
+	                <button class="dropbtn_on_header">
+	                    <span style="text-align:left">tsei</span>
+	                    <p style="text-align:left; font-size: 13px">[ROLE_Administrator]</p>
+	                    <iclass="fa-solid fa-caret-down"></i>
+	                </button>
+	                <div class="dropdown-content_on_header">
+	                    <a href="/auth/profile">profile</a>
+	                    <a href="#">settings</a>
+	                    <a href="/auth/logout">logout</a>
+	                </div>
+	            </dd>
+	        </div>
+	    </ul>
+	
+	</nav>
+</html>

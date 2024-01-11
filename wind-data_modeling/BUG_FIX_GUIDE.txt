@@ -1,0 +1,9 @@
+
+
+1. Fix Google Chrome stop working problem (only in Windows OS)
+	
+	Problem reported here:
+		https://www.reddit.com/r/selenium/comments/uqt9z9/cant_create_base_directory/
+	
+	Solution:
+		Manually create a directory "C:\Program Files\Google\GoogleUpdater"

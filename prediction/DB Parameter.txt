@@ -1,0 +1,8 @@
+127.0.0.1
+3307
+root
+
+weather
+raw_data
+estimate_grid_sensor_data_test_2
+cmap_grid_data
