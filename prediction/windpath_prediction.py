@@ -722,3 +722,214 @@ def calculate_vitual_sensor():
 if __name__ == '__main__':
     print("**** 확인")
     app.run(debug=True,host='0.0.0.0', port=5001)
+
+# prediction of wind direction and wind speed
+    
+def calculate_X_Y_RawData():
+    import mysql.connector
+    import math
+
+    # Replace the following information with your MySQL database information
+    config = {
+        'user': 'root',
+        'password': '',
+        'host': 'localhost',  # or the IP address of the MySQL server
+        'port': 3307,  # Connection port, default is 3306 for MySQL
+        'database': 'weather',
+        'raise_on_warnings': True
+    }
+
+    conn = mysql.connector.connect(**config)
+    if conn.is_connected():
+        print('Connected to MySQL database')
+
+        # Create a Cursor object to perform queries
+        cursor = conn.cursor()
+
+        queryRawData = 'SELECT * FROM raw_data'
+        # Execute query
+        cursor.execute(queryRawData)
+
+        # Get all rows of data
+        rowsRawData = cursor.fetchall()
+
+        nearest_points = []
+        for rowsofRawData in rowsRawData:
+            wd = rowsofRawData[2]
+            print("wd = ", wd)
+            ws = rowsofRawData[3]
+            X = math.sin(math.radians(wd))*ws*(-1)
+            Y = math.cos(math.radians(wd))*ws*(-1)
+            # Cập nhật giá trị sin vào cơ sở dữ liệu
+            update_query = "UPDATE raw_data SET X = %s, Y = %s WHERE m_id = %s"
+            cursor.execute(update_query, (round(X,2), round(Y,2), rowsofRawData[0]))  # Giả sử bạn muốn cập nhật dòng có id = 1
+
+            # Commit để lưu thay đổi vào cơ sở dữ liệu
+            conn.commit()
+
+def predict():
+    import mysql.connector
+    import math
+                                
+    # Replace the following information with your MySQL database information
+    config = {
+        'user': 'root',
+        'password': '',
+        'host': 'localhost',  # or the IP address of the MySQL server
+        'port': 3307,  # Connection port, default is 3306 for MySQL
+        'database': 'weather',
+        'raise_on_warnings': True
+    }
+
+    vec_x = 0
+    vec_y = 0
+    w = 0
+
+    def calculate_distance(lotofSensorgrid, latofSensorgrid, latitude, longitude):
+
+        distance = (longitude - lotofSensorgrid)**2 + (latitude - latofSensorgrid)**2
+
+        result = math.sqrt(distance)
+        
+        return result
+
+    conn = mysql.connector.connect(**config)
+
+    if conn.is_connected():
+        print('Connected to MySQL database')
+
+        # # Create a Cursor object to perform queries
+        cursor = conn.cursor()
+
+        # Write SQL query to get data from table
+        querySensorData = 'SELECT DISTINCT m_date FROM raw_data'
+
+        # Execute query
+        cursor.execute(querySensorData)
+
+        # Get all rows of data
+        rowsSensorGrid = cursor.fetchall()
+
+        # Display data
+        for row in rowsSensorGrid:
+            m_date = row[0]
+            
+            querySensorData = 'SELECT * FROM sensor_grid'
+
+            # Execute query
+            cursor.execute(querySensorData)
+
+            # Get all rows of data
+            rowsSensorGrid = cursor.fetchall()
+            ExistingLotLat = []
+            # Display data
+            for rowsofSensorgrid in rowsSensorGrid:
+                latofSensorgrid = rowsofSensorgrid[11]
+                lotofSensorgrid = rowsofSensorgrid[10]
+                grid_num = rowsofSensorgrid[0]
+
+                queryRawData = 'SELECT * FROM raw_data WHERE m_date = "'+str(m_date)+'"'
+
+                print("queryRawData = ", queryRawData)
+                # Execute query
+                cursor.execute(queryRawData)
+
+                # Get all rows of data
+                rowsRawData = cursor.fetchall()
+
+                nearest_points = []
+                for rowsofRawData in rowsRawData:
+                    wd = rowsofRawData[2]
+                    ws = rowsofRawData[3]
+                    # ========================================================
+                    latitude = rowsofRawData[5]  
+                    longtitude = rowsofRawData[6]  
+                    # ==========================================================
+                    X_rawData = round(rowsofRawData[7],2)
+                    Y_rawData = round(rowsofRawData[8],2)
+                    nameofRawData = rowsofRawData[1]
+                    m_date_RawData = rowsofRawData[4]
+                    rowData = rowsofRawData
+
+                    # =======================================================
+
+                    # print(lotofSensorgrid, latofSensorgrid, latitude, longtitude)
+
+                    distance = calculate_distance(lotofSensorgrid, latofSensorgrid, latitude, longtitude)
+                    nearest_points.append((nameofRawData,rowsofSensorgrid, distance, m_date_RawData, grid_num, lotofSensorgrid, latofSensorgrid,X_rawData,Y_rawData, wd, ws))
+                    # nearest_points.append((nameofRawData,rowsofSensorgrid, distance, m_date_RawData))
+                    # nearest_points.append(distance)
+                    # print("nearest_points = ", nearest_points)
+                nearest_points.sort(key=lambda x: x[2])  # Sort by distance
+                nearest_points = nearest_points[:3]      # Select the three closest lines
+                # distanceArray.append(distance)
+                # print("nearest_points = ", nearest_points)
+                # break
+                # calculate w1, w2, w3
+                d = []
+                for element in nearest_points:
+                    d.append(element[2])
+
+                weight = []
+                for element in nearest_points:
+                    if len(nearest_points) == 1:
+                        w = (1/element[2])/(1/d[0])
+                        weight.append(w)
+                    elif len(nearest_points) == 2:
+                        w = (1/element[2])/((1/d[0])+(1/d[1]))
+                        weight.append(w)
+                    elif len(nearest_points) == 3: 
+                        print("Nhảy vào đây ")
+                        w = (1/element[2])/((1/d[0])+(1/d[1])+(1/d[2]))
+                        weight.append(w)
+
+                if len(weight) == 1:
+                    vec_x = (weight[0]*nearest_points[0][7])
+                    vec_y = (weight[0]*nearest_points[0][8])
+                    print("v1 case 1 = ", vec_x)
+                elif len(weight) == 2: 
+                    vec_x = (weight[0]*nearest_points[0][7])+(weight[1]*nearest_points[1][7])
+                    vec_y = (weight[0]*nearest_points[0][8])+(weight[1]*nearest_points[1][8])
+                    print("v1 case 2 = ", vec_x)
+                elif len(weight) == 3: 
+                    vec_x = (weight[0]*nearest_points[0][7])+(weight[1]*nearest_points[1][7])+(weight[2]*nearest_points[2][7])
+                    vec_y = (weight[0]*nearest_points[0][8])+(weight[1]*nearest_points[1][8])+(weight[2]*nearest_points[2][8])
+                    print("v1 case 3 = ", vec_x)
+
+                vec_x = round(vec_x, 2)
+                vec_y = round(vec_y, 2)
+
+                ws = round(math.sqrt((vec_x**2)+(vec_y**2)), 2)
+                
+                radian_angle = math.asin(abs(vec_x)/ws)
+
+                temp_theta = math.degrees(radian_angle)
+
+                if(vec_x >= 0) & (vec_y >= 0):
+                    vec_theta = temp_theta
+                elif (vec_x >= 0) & (vec_y < 0):
+                    vec_theta = 180 - temp_theta
+                elif (vec_x < 0) & (vec_y >= 0):
+                    vec_theta = 360 - temp_theta
+                else:
+                    vec_theta = 180 + temp_theta
+                
+                wd = (vec_theta + 180) % 360
+
+                degree_angle = round(wd, 2)
+
+                # INSERT INTO statement
+                sql = "INSERT INTO estimate_grid_sensor_data_test_4 (m_name, center_lot,center_lat,wd,ws,vec_x,vec_y,date,section) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
+
+                # Data to be inserted
+                val = (grid_num, lotofSensorgrid, latofSensorgrid, degree_angle, ws, vec_x, vec_y, m_date_RawData, 1)
+
+                # Perform INSERT INTO with the data to be inserted
+
+                cursor.execute(sql, val)
+
+                # Save changes 
+
+                # Print a message after inserting data successfully
+                print(cursor.rowcount, "record inserted.")
+        
